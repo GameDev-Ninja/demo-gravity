@@ -204,3 +204,12 @@ CanvasRenderingContext2D.prototype.drawLine = function (from, to) {
     this.lineTo(to.x, to.y)
     this.stroke()
 }
+
+/*
+ * Retourne l'emoji ✅ pour un booléen true, et ❌ pour un booléen false
+ * @param condition
+ * @returns {string}
+ */
+function emojiFor(condition) {
+    return condition ? '✅' : '❌'
+}
