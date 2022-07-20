@@ -1,75 +1,105 @@
 /**
+ * Données initiales du jeu
+ */
+// zone de jeu
+let scr = {
+    width: 0,
+    height: 0
+}
+
+// Hauteur de sol
+let fHeight = 0
+
+// Mario !
+let M = {
+    x: 0,
+    y: 0,
+    v: 0, // La vélocité verticale, indispensable pour appliquer un effet de gravité.
+    size: 30,
+    isGrounded: false
+}
+
+// La Gravité (9.81 m/s²)
+let g = 9.81
+
+// La force des couisses ! (Vélocité du saut)
+let j = 25
+
+/**
  * Exécutée une seule fois, au chargement
  */
-function LoadGame(canvas, context) {
+function LoadGame(canvas, ctx) {
     // Interface
-    screen.width = canvas.width;
-    screen.height = canvas.height;
+    scr.width = canvas.width;
+    scr.height = canvas.height;
 
-    // Cercles
-    B.x = screen.width / 2;
-    B.y = screen.height / 3;
+    // Hauteur de sol
+    fHeight = scr.height - 25
 
-    Abis.x = Abis.r + 10;
-    Abis.y = screen.height - Bbis.r - 10;
+    // Mario va au sol, au milieu
+    M.x = scr.width/2-M.size/2
+    M.y = fHeight - M.size
 
-    Bbis.x = screen.width - Bbis.r - 10;
-    Bbis.y = screen.height - Bbis.r - 10;
+    keyDown('ArrowUp', () => {
+        if (M.isGrounded) {
+            M.v = -j
+        }
+    })
 }
 
 /**
  * Exécutée perpétuellement pour mettre à jour les données
  */
 function UpdateGame(deltaTime) {
-    distanceAB = Math.hypot(Math.abs(A.x - B.x), Math.abs(A.y - B.y));
-
-    // Actualisation de l'état de B (détection de collision)
-    B.touched = circleCollision(A, B);
-
-    // Actualisation du point de collision
-    if (B.touched) {
-        collisionPointsUpdate();
+    // Prise en compte des pressions de touche
+    if (isKeyDown('ArrowLeft') && M.x > 0) {
+        M.x -= 10
+    }
+    if (isKeyDown('ArrowRight') && M.x < scr.width - M.size) {
+        M.x += 10
     }
 
-    // Prise en compte des mouvements à partir des touches de direction et dans les limites de l'écran
-    if (isKeyDown('ArrowUp') && A.y > A.r + move && !(B.touched && A.y > B.y)) {
-        A.y -= move;
+    M.y += M.v
+    M.isGrounded = M.y + M.size >= fHeight
+    
+    if(M.isGrounded) {
+        M.v = 0
+        M.y = fHeight - M.size
     }
-    if (isKeyDown('ArrowDown') && A.y < screen.height * 2 / 3 - A.r - move && !(B.touched && A.y < B.y)) {
-        A.y += move;
+    else{
+        M.v += g * Math.sqrt(deltaTime)
     }
-    if (isKeyDown('ArrowLeft') && A.x > A.r + move && !(B.touched && A.x > B.x)) {
-        A.x -= move;
-    }
-    if (isKeyDown('ArrowRight') && A.x < screen.width - A.r - move && !(B.touched && A.x < B.x)) {
-        A.x += move;
-    }
-
-    // Actualisation de la position des cercles bis
-    circleBisUpdate();
 }
 
 /**
  * Exécutée perpétuellement pour dessiner la frame actuelle
  */
-function DrawGame(context) {
-    // Partie haute
-    drawCircle(context, B);
-    drawCircle(context, A);
-    if (B.touched) {
-        drawCircle(context, C);
+function DrawGame(ctx) {
+    drawFloor(ctx)
+    drawMario(ctx, M)
+}
+/**
+ * Dessine Mario !
+ */
+function drawMario(ctx, M){
+    ctx.fillStyle = "white"
+    ctx.fillRect(M.x, M.y, M.size, M.size)
+}
+
+/**
+ * Petit sol un peu stylé (pas vraiment lol)
+ */
+function drawFloor(ctx){
+    ctx.strokeStyle = "white"
+    ctx.lineWidth = 3
+    ctx.beginPath()
+    ctx.moveTo(0, fHeight)
+    ctx.lineTo(scr.width, fHeight)
+
+    // ctx.lineWidth = 1
+    for(let i = -25; i < scr.width; i += 15){
+        ctx.moveTo(i, scr.height)
+        ctx.lineTo(i+25, fHeight)
     }
-
-    // Partie basse
-    drawCircle(context, Bbis);
-    drawCircle(context, Abis);
-    if (B.touched) {
-        drawCircle(context, Cbis);
-    }
-
-    drawLines(context);
-
-    drawText(context);
-
-    drawSep(context);
+    ctx.stroke()
 }
