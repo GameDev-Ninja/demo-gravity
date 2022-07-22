@@ -7,9 +7,7 @@ let downKeys = new Set()
 // Lors d'une pression, ajoute le `keyCode` à la liste
 document.addEventListener("keydown", e => {
     e.preventDefault()
-
-    if (!e.repeat)
-        downKeys.add(e.code)
+    downKeys.add(e.code)
 })
 
 // Lors du relâchement de pression, retire le keyCode de la liste
