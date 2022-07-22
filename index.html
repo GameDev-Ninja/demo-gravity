@@ -4,20 +4,43 @@
     <meta charset="UTF-8">
     <title>Starter-Kit JavaScript  - Game-Dev.Ninja 🥷</title>
     <link rel="icon" type="image/png" href="./assets/images/favicon.png" />
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="./style.css">
     <script src="./helpers.js"></script>
     <script src="./input-system.js"></script>
-    <script src="./js/elements.js"></script>
-    <script src="./js/updateFn.js"></script>
-    <script src="./js/drawFn.js"></script>
     <script src="./script.js"></script>
     <script defer src="./game-loop.js"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 <body>
-    <canvas id="canvas"
-            width="800"
-            height="600"
-            style="background-color: black;"
-    ></canvas>
+    <div x-data="settings()" class="relative">
+        <canvas id="canvas"
+                width="800"
+                height="600"
+                style="background-color: black;"
+        ></canvas>
+        <div class="absolute top-3 right-12">
+            <div>
+                <button @click="plusMsize()" class="inline-block w-6 bg-violet-300 mr-1 rounded text-gray-900">+</button>
+                <button @click="minMsize()" class="inline-block w-6 bg-violet-300 rounded text-gray-900">-</button>
+                M.size = <span x-text="Msize"></span> px
+            </div>
+            <div>
+                <button @click="plusMj()" class="inline-block w-6 bg-violet-300 mr-1 rounded text-gray-900">+</button>
+                <button @click="minMj()" class="inline-block w-6 bg-violet-300 rounded text-gray-900">-</button>
+                M Jump speed = <span x-text="Mj"></span> m/s
+            </div>
+            <div>
+                <button @click="plusSpeed()" class="inline-block w-6 bg-violet-300 mr-1 rounded text-gray-900">+</button>
+                <button @click="minSpeed()" class="inline-block w-6 bg-violet-300 rounded text-gray-900">-</button>
+                Vitesse de l'effet = <span x-text="speed"></span>
+            </div>
+            <div>
+                <button @click="plusG()" class="inline-block w-6 bg-violet-300 mr-1 rounded text-gray-900">+</button>
+                <button @click="minG()" class="inline-block w-6 bg-violet-300 rounded text-gray-900">-</button>
+                g = <span x-text="Math.round(g*100)/100"></span> m/s²
+            </div>
+        </div>
+    </div>
 </body>
 </html>

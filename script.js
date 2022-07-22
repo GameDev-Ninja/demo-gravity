@@ -11,11 +11,11 @@ let scr = {
 let fHeight = 0
 
 // Mario !
-let M = {
+const M = {
     x: 0,
     y: 0,
     v: 0, // La vélocité verticale, indispensable pour appliquer un effet de gravité.
-    j: -6, // Vitesse initial de saut en m/s
+    j: 6, // Vitesse initial de saut en m/s
     size: 75,
     isGrounded: false
 }
@@ -46,31 +46,10 @@ function LoadGame(canvas, ctx) {
     M.y = fHeight - M.size
 
     // Prise en compte des pressions de touches non répétèes
-    keyDown('ArrowUp', () => {
+    keyDown('Space', () => {
         if (M.isGrounded) {
-            M.v = M.j * conv
+            M.v = -M.j * conv
         }
-    })
-    keyDown('NumpadAdd', () => {
-        if(isKeyDown('KeyT')){
-            M.size += 5
-        }
-        else if(isKeyDown('KeyS')){
-            M.j -= 1
-        }
-        else{
-            speed += 0.5
-        }
-    })
-    keyDown('NumpadSubtract', () => {
-        if(isKeyDown('KeyT')){
-            M.size -= 5
-        }
-        else if(isKeyDown('KeyS')){
-            M.j += 1
-        }
-        else{
-            speed -= 0.5        }
     })
 }
 
@@ -82,10 +61,10 @@ function UpdateGame(deltaTime) {
     conv = M.size / 1.55
 
     // Prise en compte des pressions de touche
-    if (isKeyDown('ArrowLeft') && M.x > 0) {
+    if (isKeyDown('ArrowLeft') && M.x > 0) {console.log('left')
         M.x -= 10
     }
-    if (isKeyDown('ArrowRight') && M.x < scr.width - M.size) {
+    if (isKeyDown('ArrowRight') && M.x < scr.width - M.size) {console.log('right')
         M.x += 10
     }
 
@@ -108,7 +87,6 @@ function DrawGame(ctx) {
     drawFloor(ctx)
     drawMario(ctx, M)
     drawRule(ctx)
-    drawValues(ctx)
 }
 /**
  * Dessine Mario !
@@ -159,11 +137,43 @@ function drawRule(ctx){
     }
 }
 
-function drawValues(ctx){
-    ctx.fillStyle = "white"
-    ctx.font = "15px sans"
-
-    ctx.fillText(`Echelle: t + numpad +/- = ${M.size}`, scr.width - 350, 25)
-    ctx.fillText(`Vitesse saut: s + numpad +/- = ${M.j} m/s`, scr.width - 350, 50)
-    ctx.fillText(`Vitesse effet: numpad +/- = *${speed}`, scr.width - 350, 75)
+function settings(){
+    return {
+        Msize: M.size,
+        Mj : M.j,
+        speed: speed,
+        g: g,
+        plusMsize: function(){
+            M.size += 5
+            this.Msize = M.size
+        },
+        minMsize: function(){
+            M.size -= 5
+            this.Msize = M.size
+        },
+        plusMj: function(){
+            M.j += 1
+            this.Mj = M.j
+        },
+        minMj: function(){
+            M.j -= 1
+            this.Mj = M.j
+        },
+        plusSpeed: function(){
+            speed += 0.5
+            this.speed = speed
+        },
+        minSpeed: function(){
+            speed -= 0.5
+            this.speed = speed
+        },
+        plusG: function(){
+            g += 1
+            this.g = g
+        },
+        minG: function(){
+            g -= 1
+            this.g = g
+        },
+    }
 }
