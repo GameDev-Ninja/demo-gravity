@@ -137,6 +137,10 @@ function drawRule(ctx){
     }
 }
 
+/**
+ * Cette fonction permet de charger les variables dans le composant alpine pour les afficher correctement
+ * Et du coup on modifie les paramètres ici via les fonctions en propriété de l'objet que reçoit alpine
+ */
 function settings(){
     return {
         Msize: M.size,
