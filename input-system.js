@@ -2,29 +2,29 @@
  * Ces trois fonctions facilitent la gestion du clavier
  */
 // Stock les `keyCode` des touches actuellement enfoncées
-let downKeys = []
+let downKeys = new Set()
 
 // Lors d'une pression, ajoute le `keyCode` à la liste
 document.addEventListener("keydown", e => {
     e.preventDefault()
 
     if (!e.repeat)
-        downKeys.push(e.code)
+        downKeys.add(e.code)
 })
 
 // Lors du relâchement de pression, retire le keyCode de la liste
 document.addEventListener("keyup", e => {
     e.preventDefault()
 
-    let downKeysIndex = downKeys.findIndex(keyCode => keyCode === e.code)
-    downKeys.splice(downKeysIndex, 1)
+    downKeys.delete(e.code)
 })
 
 // Vide la liste lorsque la page n'est plus affichée
-window.addEventListener("blur", e => downKeys = [])
+window.addEventListener("blur", _ => downKeys.clear())
+
 
 // Indique si une touche est enfoncée ou non
-const isKeyDown = searchedCode => downKeys.findIndex(keyCode => keyCode === searchedCode) !== -1
+const isKeyDown = searchedCode => downKeys.has(searchedCode)
 
 // Assigne une fonction à la pression d'une touche
 const keyDown = (keyCode, callback) =>
